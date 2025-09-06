@@ -13,6 +13,12 @@ const App = () => {
         <div> <Dashboard /> </div>
       </main>
 
+      <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/dasboard/gesture" element={<Gesture />} />
+    </Routes>
+
       <Footer />
     </div>
   )
