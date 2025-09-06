@@ -2,7 +2,7 @@ import React from "react";
 import Home from "./components/Home";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
-import Gesture from "./components/gesture.jsx"
+import Gesture from "./components/gesture"
 
 const Mainroutes = () => {
   return (
