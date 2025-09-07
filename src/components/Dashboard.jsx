@@ -109,6 +109,7 @@ import {
   MessageSquare,
   BarChart3,
 } from "lucide-react"
+import { useTheme } from "@/components/theme-provider"
 
 export default function Dashboard() {
   const [isDarkMode, setIsDarkMode] = useState(false)
@@ -133,6 +134,7 @@ export default function Dashboard() {
     activeTime: "2h 15m",
     accuracy: 96.5,
   })
+  const { setTheme } = useTheme()
 
   // Simulate real-time gesture detection
   useEffect(() => {
@@ -171,7 +173,7 @@ export default function Dashboard() {
 
     return () => clearInterval(interval)
   }, [])
-
+  // console.log(setTheme)
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-cyan-50/30">
       {/* Navigation */}
@@ -187,19 +189,21 @@ export default function Dashboard() {
                 <span className="text-white font-bold text-sm">SG</span>
               </div>
               <span className="text-xl font-bold text-foreground">SignGlove</span>
-              <Badge variant="secondary" className="ml-2 bg-accent/10 text-accent border-accent/20">
+              <Badge variant="secondary">
                 Dashboard
               </Badge>
             </motion.div>
 
             <div className="flex items-center space-x-4">
               <Button
-                variant="ghost"
+                variant="outline"
                 size="icon"
-                onClick={() => setIsDarkMode(!isDarkMode)}
+                onClick={() => setTheme("dark")}
                 className="hover:bg-accent/10"
               >
-                {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+                <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+                <span className="sr-only">Toggle theme</span>
               </Button>
 
               <DropdownMenu>
@@ -245,7 +249,7 @@ export default function Dashboard() {
             <Card className="bg-card/60 backdrop-blur-sm border-border/20">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Hand className="w-5 h-5 text-accent" />
+                  <Hand className="w-5 h-5" />
                   Connected Gloves
                 </CardTitle>
               </CardHeader>
@@ -254,22 +258,21 @@ export default function Dashboard() {
                   <motion.div
                     key={glove.id}
                     whileHover={{ scale: 1.02 }}
-                    className={`p-4 rounded-lg border transition-all duration-300 ${
-                      glove.isActive
+                    className={`p-4 rounded-lg border transition-all duration-300 ${glove.isActive
                         ? "border-accent/50 bg-accent/5 shadow-lg shadow-accent/20"
                         : "border-border/20 bg-muted/30"
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         {glove.isActive ? (
-                          <Wifi className="w-4 h-4 text-accent" />
+                          <Wifi className="w-4 h-4" />
                         ) : (
-                          <WifiOff className="w-4 h-4 text-muted-foreground" />
+                          <WifiOff className="w-4 h-4" />
                         )}
                         <span className="font-medium">{glove.name}</span>
                       </div>
-                      {glove.isActive && <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />}
+                      {glove.isActive && <div className="w-2 h-2 rounded-full animate-pulse" />}
                     </div>
                     <div className="text-sm text-muted-foreground mb-2">ID: {glove.id}</div>
                     <div className="flex items-center justify-between">
@@ -320,7 +323,7 @@ export default function Dashboard() {
 
                   <div className="mt-8 p-4 bg-muted/30 rounded-lg">
                     <div className="flex items-center gap-2 mb-2">
-                      <MessageSquare className="w-4 h-4 text-accent" />
+                      <MessageSquare className="w-4 h-4" />
                       <span className="text-sm font-medium">Building Text:</span>
                     </div>
                     <motion.div
@@ -350,7 +353,7 @@ export default function Dashboard() {
               <Card className="bg-card/60 backdrop-blur-sm border-border/20">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Settings className="w-5 h-5 text-accent" />
+                    <Settings className="w-5 h-5 text-accent-foreground" />
                     Controls
                   </CardTitle>
                 </CardHeader>
@@ -359,9 +362,9 @@ export default function Dashboard() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         {isTextToSpeech ? (
-                          <Volume2 className="w-4 h-4 text-accent" />
+                          <Volume2 className="w-4 h-4" />
                         ) : (
-                          <VolumeX className="w-4 h-4 text-muted-foreground" />
+                          <VolumeX className="w-4 h-4" />
                         )}
                         <span className="text-sm font-medium">Text + Speech</span>
                       </div>
@@ -448,7 +451,7 @@ export default function Dashboard() {
               <Card className="bg-card/60 backdrop-blur-sm border-border/20">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <BarChart3 className="w-5 h-5 text-accent" />
+                    <BarChart3 className="w-5 h-5" />
                     Today's Stats
                   </CardTitle>
                 </CardHeader>
@@ -460,7 +463,7 @@ export default function Dashboard() {
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-muted-foreground">Words Spoken</span>
-                      <span className="font-bold text-accent">{stats.wordsSpoken}</span>
+                      <span className="font-bold text-primary">{stats.wordsSpoken}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-muted-foreground">Active Time</span>
