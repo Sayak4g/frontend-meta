@@ -5,7 +5,7 @@ import { SocketProvider  } from "./context/SocketContext";
 const App = () => {
   return (
     <ThemeProvider defaultTheme="dark">
-      <SocketProvider>
+      {/* <SocketProvider> */}
         <div className="flex flex-col min-h-screen">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -13,7 +13,7 @@ const App = () => {
           <Route path="/dasboard/gesture" element={<Gesture />} />
         </Routes>
       </div>
-      </SocketProvider>
+      {/* </SocketProvider> */}
     </ThemeProvider>
   )
 }

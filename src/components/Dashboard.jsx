@@ -1,89 +1,6 @@
-// // pages/Dashboard.jsx
-
-// import React from 'react';
-
-// const Dashboard = () => {
-//   // Dummy data — replace with real API data
-//   const stats = [
-//     { title: "Total Gestures Today", value: 128, icon: "🤟" },
-//     { title: "Recognition Accuracy", value: "94%", icon: "🎯" },
-//     { title: "Active Sessions", value: 3, icon: "🟢" },
-//     { title: "Total Playback Sessions", value: 42, icon: "⏪" },
-//   ];
-
-//   const recentSessions = [
-//     { id: 1, date: "2025-09-06", gestures: 18, accuracy: "95%" },
-//     { id: 2, date: "2025-09-05", gestures: 22, accuracy: "92%" },
-//     { id: 3, date: "2025-09-04", gestures: 12, accuracy: "97%" },
-//   ];
-
-//   return (
-//     <div className="max-w-7xl mx-auto px-4 py-8">
-//       <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
-
-//       {/* Stats Grid */}
-//       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-10">
-//         {stats.map((stat, index) => (
-//           <div
-//             key={index}
-//             className="bg-white shadow-md rounded-lg p-4 flex items-center space-x-4"
-//           >
-//             <div className="text-3xl">{stat.icon}</div>
-//             <div>
-//               <div className="text-gray-600 text-sm">{stat.title}</div>
-//               <div className="text-xl font-bold">{stat.value}</div>
-//             </div>
-//           </div>
-//         ))}
-//       </div>
-
-//       {/* Recent Sessions */}
-//       <div className="bg-white shadow-md rounded-lg p-6">
-//         <h2 className="text-2xl font-semibold mb-4">Recent Sessions</h2>
-//         <div className="overflow-x-auto">
-//           <table className="min-w-full text-left text-sm">
-//             <thead className="bg-gray-100 text-gray-600 uppercase">
-//               <tr>
-//                 <th className="px-4 py-2">Date</th>
-//                 <th className="px-4 py-2">Gestures</th>
-//                 <th className="px-4 py-2">Accuracy</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {recentSessions.map((session) => (
-//                 <tr key={session.id} className="border-t">
-//                   <td className="px-4 py-2">{session.date}</td>
-//                   <td className="px-4 py-2">{session.gestures}</td>
-//                   <td className="px-4 py-2">{session.accuracy}</td>
-//                 </tr>
-//               ))}
-//             </tbody>
-//           </table>
-//         </div>
-//       </div>
-
-//       {/* Premium CTA */}
-//       <div className="mt-10 p-6 bg-indigo-600 text-white rounded-lg flex flex-col md:flex-row justify-between items-center">
-//         <div className="text-lg font-medium">
-//           Unlock advanced analytics and unlimited sessions.
-//         </div>
-//         <a
-//           href="/premium"
-//           className="mt-4 md:mt-0 bg-white text-indigo-600 px-6 py-2 rounded hover:bg-gray-100 font-semibold transition"
-//         >
-//           Go Premium
-//         </a>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Dashboard;
-
-
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -110,12 +27,13 @@ import {
   BarChart3,
 } from "lucide-react"
 import { useTheme } from "@/components/theme-provider"
+import { io, Socket } from "socket.io-client";
+import axios from "axios"
 
 export default function Dashboard() {
-  const [isDarkMode, setIsDarkMode] = useState(false)
   const [currentGesture, setCurrentGesture] = useState("HELLO")
   const [buildingText, setBuildingText] = useState("Hello world")
-  const [isTextToSpeech, setIsTextToSpeech] = useState(true)
+  const [isTextToSpeech, setIsTextToSpeech] = useState(false)
   const [selectedLanguage, setSelectedLanguage] = useState("english")
   const [connectedGloves] = useState([
     { id: "SG-001", name: "Left Glove", isActive: true, batteryLevel: 85 },
@@ -134,46 +52,103 @@ export default function Dashboard() {
     activeTime: "2h 15m",
     accuracy: 96.5,
   })
+  const gestureData = useRef(null)
   const { setTheme } = useTheme()
+  const BACKEND_URL = "http://127.0.0.1:3000";
 
   // Simulate real-time gesture detection
   useEffect(() => {
-    const gestures = ["HELLO", "WORLD", "THANK", "YOU", "PLEASE", "HELP", "YES", "NO"]
-    const interval = setInterval(() => {
-      const randomGesture = gestures[Math.floor(Math.random() * gestures.length)]
-      setCurrentGesture(randomGesture)
-    }, 3000)
+    // console.log(SOCKET_URL)
+    // const newSocket = io(SOCKET_URL, { withCredentials: true });
+    // console.log(newSocket)
+    // newSocket.on("connect", () =>
+    //   console.log("Socket connected!", newSocket.id)
+    // );
+    // newSocket.on("disconnect", () =>
+    //   console.log("Socket disconnected!")
+    // );
+    // newSocket.on("connect_error", (err) =>
+    //   console.error("Socket connection error:", err.message)
+    // );
 
-    return () => clearInterval(interval)
+
+    // const gestures = ["HELLO", "WORLD", "THANK", "YOU", "PLEASE", "HELP", "YES", "NO"]
+    // const interval = setInterval(() => {
+    //   const randomGesture = gestures[Math.floor(Math.random() * gestures.length)]
+    //   setCurrentGesture(randomGesture)
+    // }, 3000)
+
+    return () => {
+      // newSocket.off("connect");
+      // newSocket.off("disconnect");
+      // newSocket.off("connect_error");
+      // newSocket.disconnect();
+      // clearInterval(interval)
+    }
   }, [])
 
   // Simulate building text animation
   useEffect(() => {
-    const texts = ["Hello world", "How are you", "Thank you very much", "Please help me"]
-    let currentIndex = 0
+    // const texts = ["Hello world", "How are you", "Thank you very much", "Please help me"]
+    // let currentIndex = 0
 
-    const interval = setInterval(() => {
-      const targetText = texts[currentIndex]
-      let currentText = ""
-      let charIndex = 0
+    // const interval = setInterval(() => {
+    //   const targetText = texts[currentIndex]
+    //   let currentText = ""
+    //   let charIndex = 0
 
-      const buildInterval = setInterval(() => {
-        if (charIndex < targetText.length) {
-          currentText += targetText[charIndex]
-          setBuildingText(currentText)
-          charIndex++
-        } else {
-          clearInterval(buildInterval)
-          setTimeout(() => {
-            currentIndex = (currentIndex + 1) % texts.length
-          }, 2000)
-        }
-      }, 100)
-    }, 6000)
+    //   const buildInterval = setInterval(() => {
+    //     if (charIndex < targetText.length) {
+    //       currentText += targetText[charIndex]
+    //       setBuildingText(currentText)
+    //       charIndex++
+    //     } else {
+    //       clearInterval(buildInterval)
+    //       setTimeout(() => {
+    //         currentIndex = (currentIndex + 1) % texts.length
+    //       }, 2000)
+    //     }
+    //   }, 100)
+    // }, 6000)
 
-    return () => clearInterval(interval)
+    // return () => clearInterval(interval)
   }, [])
-  // console.log(setTheme)
+
+  const fetchGestures = useCallback(async () => {
+    const gesture = gestureData.current ? gestureData.current.message : null
+    const response = await axios.get(`${BACKEND_URL}/api/gestures`)
+    gestureData.current = response.data.data
+    setCurrentGesture(response.data.data.message)
+    setBuildingText(response.data.data.text)
+    if(gesture !== response.data.data.message && isTextToSpeech) {
+      console.log("New gesture detected, fetching TTS...")
+      const tts = await axios.get(`${BACKEND_URL}/tts`, {
+        params: { text: response.data.data.message, language: selectedLanguage },
+        responseType: 'blob',
+      })
+
+      if (!tts.data || !tts.data) {
+      console.error("TTS request failed");
+      return;
+    }
+    // URL.createObjectURL(res.data);
+    // const blob = await tts.data.blob();
+    const url = URL.createObjectURL(tts.data);
+    const audio = new Audio(url);
+    await audio.play();
+    console.log("Playing audio from URL:", url, audio);
+    // URL.revokeObjectURL(url);
+    }
+  }, [BACKEND_URL, isTextToSpeech, selectedLanguage]);
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      await fetchGestures()
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [fetchGestures])
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-cyan-50/30">
       {/* Navigation */}
@@ -259,8 +234,8 @@ export default function Dashboard() {
                     key={glove.id}
                     whileHover={{ scale: 1.02 }}
                     className={`p-4 rounded-lg border transition-all duration-300 ${glove.isActive
-                        ? "border-accent/50 bg-accent/5 shadow-lg shadow-accent/20"
-                        : "border-border/20 bg-muted/30"
+                      ? "border-accent/50 bg-accent/5 shadow-lg shadow-accent/20"
+                      : "border-border/20 bg-muted/30"
                       }`}
                   >
                     <div className="flex items-center justify-between mb-2">
